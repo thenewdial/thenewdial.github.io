@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The New Dial — Portal da Tríade</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ===== NAVEGAÇÃO SUPERIOR ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(10, 10, 10, 0.95);
+      border-bottom: 2px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #dc2626, #facc15);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .about-btn {
+      padding: 10px 24px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 2px solid #dc2626;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .about-btn:hover {
+      background: rgba(220, 38, 38, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    }
+
+    .about-btn.active {
+      background: rgba(220, 38, 38, 0.5);
+      border-color: #facc15;
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-menu li {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-menu li:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-menu li.active {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: #dc2626;
+    }
+
+    /* ===== CONTAINER DE CENAS ===== */
+    #scenes-container {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+        height: 60px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .about-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+
+      .nav-menu {
+        gap: 4px;
+      }
+
+      .nav-menu li {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      #scenes-container {
+        top: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVEGAÇÃO -->
+  <nav>
+    <div class="logo">THE NEW DIAL</div>
+    
+    <div class="nav-center">
+      <button class="about-btn" id="aboutBtn">About</button>
+    </div>
+    
+    <ul class="nav-menu">
+      <li data-scene="0" class="active">C0</li>
+      <li data-scene="1">C1</li>
+      <li data-scene="2">C2</li>
+      <li data-scene="3">C3</li>
+      <li data-scene="4">C4</li>
+      <li data-scene="5">C5</li>
+      <li data-scene="6">C6</li>
+      <li data-scene="7">C7</li>
+      <li data-scene="8">C8</li>
+      <li data-scene="9">C9</li>
+    </ul>
+  </nav>
+
+  <!-- CONTAINER DE CENAS -->
+  <div id="scenes-container">
+    <div class="scene active" id="scene-0">
+      <iframe src="C0.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-1">
+      <iframe src="C1.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-2">
+      <iframe src="C2.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-3">
+      <iframe src="C3.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-4">
+      <iframe src="C4.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-5">
+      <iframe src="C5.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-6">
+      <iframe src="C6.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-7">
+      <iframe src="C7.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-8">
+      <iframe src="C8.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="scene" id="scene-9">
+      <iframe src="C9.html" style="width:100%;height:100%;border:none;"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const navItems = document.querySelectorAll('.nav-menu li');
+    const scenes = document.querySelectorAll('.scene');
+    const aboutBtn = document.getElementById('aboutBtn');
+    let aboutVisible = true;
+
+    // ===== NAVEGAÇÃO ENTRE CENAS =====
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const sceneIndex = item.dataset.scene;
+
+        // Atualiza menu ativo
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // Atualiza cena ativa
+        scenes.forEach(s => s.classList.remove('active'));
+        document.getElementById(`scene-${sceneIndex}`).classList.add('active');
+      });
+    });
+
+    // ===== BOTÃO ABOUT =====
+    aboutBtn.addEventListener('click', () => {
+      aboutVisible = !aboutVisible;
+      aboutBtn.classList.toggle('active', aboutVisible);
+      
+      // Envia mensagem para TODAS as cenas (iframes)
+      scenes.forEach(scene => {
+        const iframe = scene.querySelector('iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({
+            type: 'toggleAbout',
+            visible: aboutVisible
+          }, '*');
+        }
+      });
+      
+      console.log(`About: ${aboutVisible ? 'visible' : 'hidden'}`);
+    });
+
+    // ===== NAVEGAÇÃO POR TECLADO =====
+    document.addEventListener('keydown', (e) => {
+      const activeItem = document.querySelector('.nav-menu li.active');
+      if (!activeItem) return;
+
+      const current = parseInt(activeItem.dataset.scene);
+      let next = current;
+
+      if (e.key === 'ArrowRight' && current < 9) next = current + 1;
+      if (e.key === 'ArrowLeft' && current > 0) next = current - 1;
+
+      if (next !== current) {
+        document.querySelector(`[data-scene="${next}"]`).click();
+      }
+    });
+  </script>
+</body>
+</html>
