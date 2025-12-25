@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>C2 — The New Dial Portal</title>
+<title>C2 — Northeast / Implementer</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
@@ -23,15 +23,8 @@
     width: 100vw;
     height: 100vh;
     position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url('bg-c2-astral.jpg');
-    transition: background-image 0.6s ease;
-  }
-
-  .scene-container.no-image {
-    background-image: linear-gradient(135deg, #2d1b4e 0%, #5b21b6 100%);
+    background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 40%, #4a1a5e 100%);
+    transition: background 0.6s ease;
   }
 
   .scene-container::after {
@@ -39,51 +32,51 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: radial-gradient(ellipse 1200px 800px at 50% 40%, 
-                rgba(0,0,0,0) 20%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.35) 100%);
+    background: radial-gradient(ellipse 1500px 1000px at 50% 40%, 
+                rgba(124,58,237,0.2) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.7) 100%);
     z-index: 1;
   }
 
-  /* ===== ELEMENTOS FLUTUANTES (ORBS) ===== */
+  /* ===== ELEMENTOS FLUTUANTES (ORBS ROXOS/MÍSTICOS) ===== */
   .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.3;
+    filter: blur(85px);
+    opacity: 0.28;
     pointer-events: none;
     z-index: 2;
   }
 
-  .orb1 { width: 350px; height: 350px; background: #7c3aed; top: 10%; left: 15%; animation: float1 22s ease-in-out infinite; }
-  .orb2 { width: 280px; height: 280px; background: #a855f7; top: 60%; left: 65%; animation: float2 27s ease-in-out infinite; }
-  .orb3 { width: 220px; height: 220px; background: #c084fc; top: 25%; right: 12%; animation: float3 20s ease-in-out infinite; }
-  .orb4 { width: 300px; height: 300px; background: #9333ea; bottom: 15%; left: 45%; animation: float1 24s ease-in-out infinite; }
-  .orb5 { width: 240px; height: 240px; background: #6b21a8; top: 70%; left: 18%; animation: float2 21s ease-in-out infinite; }
-  .orb6 { width: 280px; height: 280px; background: #d8b4fe; bottom: 8%; right: 20%; animation: float3 26s ease-in-out infinite; }
+  .orb1 { width: 380px; height: 380px; background: #7c3aed; top: 8%; left: 12%; animation: float1 26s ease-in-out infinite; }
+  .orb2 { width: 320px; height: 320px; background: #5b21b6; top: 58%; left: 62%; animation: float2 30s ease-in-out infinite; }
+  .orb3 { width: 290px; height: 290px; background: #8b5cf6; top: 28%; right: 10%; animation: float3 24s ease-in-out infinite; }
+  .orb4 { width: 340px; height: 340px; background: #6d28d9; bottom: 12%; left: 42%; animation: float1 28s ease-in-out infinite; }
+  .orb5 { width: 270px; height: 270px; background: #a78bfa; top: 68%; left: 18%; animation: float2 25s ease-in-out infinite; }
+  .orb6 { width: 310px; height: 310px; background: #4c1d95; bottom: 8%; right: 15%; animation: float3 29s ease-in-out infinite; }
 
   @keyframes float1 {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(35px, -45px) scale(1.1); }
+    50% { transform: translate(42px, -48px) scale(1.1); }
   }
 
   @keyframes float2 {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-45px, 35px) scale(0.95); }
+    50% { transform: translate(-48px, 38px) scale(0.94); }
   }
 
   @keyframes float3 {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(30px, 40px) scale(1.05); }
+    50% { transform: translate(38px, 42px) scale(1.06); }
   }
 
   /* ===== FRAMES ===== */
   .frame {
     position: absolute;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(10px) saturate(120%);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    background: rgba(124, 58, 237, 0.1);
+    backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 45px rgba(124, 58, 237, 0.15);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -95,7 +88,7 @@
 
   .frame.active {
     z-index: 100;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.75), 0 0 65px rgba(139, 92, 246, 0.25);
   }
 
   .frame-content {
@@ -157,7 +150,7 @@
   }
 
   .window-header button:hover {
-    background: rgba(255,255,255,0.08);
+    background: rgba(139, 92, 246, 0.2);
     border-radius: 3px;
     color: #fff;
   }
@@ -166,10 +159,6 @@
 
   .toggle-btn {
     background: #676d75;
-  }
-
-  .reset-btn {
-    background: rgba(45, 120, 158, 0.7);
   }
 
   .frame-close {
@@ -182,91 +171,17 @@
     right: 20px;
     font-size: 14px;
     font-weight: 400;
-    color: #fff;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
     z-index: 9999;
     pointer-events: none;
   }
 
-  /* ===== HUD INTERNO ===== */
-  .hud {
-    display: none;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 320px;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(15px);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    z-index: 1000;
-    color: #fff;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  }
-
-  .hud h3 {
-    font-size: 15px;
-    margin-bottom: 16px;
-    opacity: 0.95;
-    color: #a855f7;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .hud-section {
-    margin-bottom: 18px;
-  }
-
-  .hud-section strong {
-    font-size: 12px;
-    display: block;
-    margin-bottom: 8px;
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .hud-btn {
-    width: 100%;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    color: #fff;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: left;
-  }
-
-  .hud-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(3px);
-  }
-
-  .hud input[type="file"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    color: #fff;
-    font-size: 12px;
-  }
-
-  .hud-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
   /* ===== RESPONSIVO ===== */
   @media (max-width: 768px) {
-    .hud {
-      width: calc(100% - 40px);
-      max-width: 320px;
+    .frame {
+      min-width: 120px;
+      min-height: 80px;
     }
   }
 </style>
@@ -274,9 +189,9 @@
 <body>
 
 <div class="scene-container">
-  <div class="scene-title">C2 — Implementer</div>
+  <div class="scene-title">C2 — Northeast / Implementer</div>
 
-  <!-- ORBS FLUTUANTES -->
+  <!-- ORBS FLUTUANTES ROXOS -->
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
@@ -286,278 +201,327 @@
 
   <!-- ========== FRAMES PRÉ-CONFIGURADOS ========== -->
 
-  <!-- 🏛️ THE NEW DIAL LOGO (Arte Nova) -->
-  <div id="frame-logo" class="frame transparent"
-       style="left: 2%; top: 2%; width: 420px; height: 220px; z-index: 50;">
+  <!-- 🔮 PENTAGRAMA ALQUÍMICO (arte CSS/SVG) -->
+  <div id="frame-pentagram" class="frame transparent"
+       style="left: 2%; top: 2%; width: 220px; height: 220px; z-index: 50;">
     <div class="window-header">
-      <button class="toggle-btn" onclick="toggleSize('frame-logo')">⇕</button>
+      <button class="toggle-btn" onclick="toggleSize('frame-pentagram')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
     <div class="frame-content" style="padding: 0;">
-      <svg viewBox="0 0 400 200" style="width:100%;height:100%">
+      <svg viewBox="0 0 220 220" style="width:100%;height:100%">
         <defs>
-          <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#d8b4fe;stop-opacity:1" />
+          <linearGradient id="pentaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.9" />
+            <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:0.8" />
           </linearGradient>
-          <filter id="glow2">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <filter id="purpleGlow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
-        <!-- Círculos concêntricos (implementação em camadas) -->
-        <circle cx="200" cy="100" r="70" fill="none" stroke="url(#logoGrad2)" stroke-width="2" opacity="0.4" filter="url(#glow2)"/>
-        <circle cx="200" cy="100" r="55" fill="none" stroke="url(#logoGrad2)" stroke-width="2" opacity="0.6" filter="url(#glow2)"/>
-        <circle cx="200" cy="100" r="40" fill="none" stroke="url(#logoGrad2)" stroke-width="2" opacity="0.8" filter="url(#glow2)"/>
-        <circle cx="200" cy="100" r="8" fill="url(#logoGrad2)" filter="url(#glow2)"/>
-        <text x="200" y="160" text-anchor="middle" fill="url(#logoGrad2)" 
-              font-size="28" font-weight="800" font-family="Arial, sans-serif" filter="url(#glow2)">
-          THE NEW DIAL
-        </text>
-        <text x="200" y="185" text-anchor="middle" fill="rgba(255,255,255,0.7)" 
-              font-size="14" font-weight="300" font-family="Arial, sans-serif">
-          Implementer · Transformation
-        </text>
+        
+        <!-- Círculo externo -->
+        <circle cx="110" cy="110" r="85" fill="none" stroke="url(#pentaGrad)" stroke-width="2.5" opacity="0.6">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 110 110"
+            to="360 110 110"
+            dur="50s"
+            repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Pentagrama (5 pontas) -->
+        <path d="M110,35 L132,90 L190,90 L145,125 L165,180 L110,145 L55,180 L75,125 L30,90 L88,90 Z" 
+              fill="none" 
+              stroke="url(#pentaGrad)" 
+              stroke-width="2.5" 
+              filter="url(#purpleGlow)"
+              opacity="0.8"/>
+        
+        <!-- Centro pulsante -->
+        <circle cx="110" cy="110" r="10" fill="#a78bfa" opacity="0.9">
+          <animate attributeName="r" values="8;12;8" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Símbolos alquímicos (pequenos círculos nas pontas) -->
+        <circle cx="110" cy="35" r="4" fill="#8b5cf6"/>
+        <circle cx="190" cy="90" r="4" fill="#7c3aed"/>
+        <circle cx="165" cy="180" r="4" fill="#5b21b6"/>
+        <circle cx="55" cy="180" r="4" fill="#6d28d9"/>
+        <circle cx="30" cy="90" r="4" fill="#a78bfa"/>
       </svg>
     </div>
   </div>
 
-  <!-- 📺 VÍDEO EMBED -->
-  <div id="frame-video" class="frame" style="left: 25%; top: 15%; width: 50%; height: 45%;">
+  <!-- 📺 VÍDEO YOUTUBE EMBED -->
+  <div id="frame-video" class="frame" style="left: 25%; top: 12%; width: 50%; height: 45%;">
     <div class="window-header">
       <button class="toggle-btn" onclick="toggleSize('frame-video')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
-    <div class="frame-content" style="padding: 0;">
-      <iframe 
-        src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0&modestbranding=1" 
-        title="The New Dial Show" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    <div class="frame-content" style="padding: 0; width: 100%; height: calc(100% - 20px);">
+      <iframe
+        src="https://www.youtube.com/embed/h9KWhnCr8Mg?rel=0"
+        title="The New Dial Dashboard"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
-        style="border-radius: 8px;">
+        referrerpolicy="strict-origin-when-cross-origin"
+        style="width: 100%; height: 100%; border: none; border-radius: 0 0 8px 8px;">
       </iframe>
     </div>
   </div>
 
-  <!-- 📝 TEXTO APRESENTAÇÃO (ID mantido: frame-about) -->
-  <div id="frame-about" class="frame" style="right: 2%; top: 2%; width: 320px; height: 480px;">
+  <!-- ⚙️ ENGRENAGENS (símbolo da implementação) -->
+  <div id="frame-gears" class="frame transparent" style="left: 2%; top: 28%; width: 200px; height: 200px;">
     <div class="window-header">
-      <button class="toggle-btn" onclick="toggleSize('frame-about')">⇕</button>
-      <button class="frame-close" onclick="closeFrame(this)">×</button>
-    </div>
-    <div class="frame-content">
-      <div style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.9);text-align:justify;overflow-y:auto;padding:10px;">
-        <h2 style="font-size:20px;margin-bottom:16px;color:#a855f7;text-align:center">COMO FUNCIONA?</h2>
-        
-        <p style="margin-bottom:14px">
-          A Tríade opera através do <strong>Dashboard</strong> — um sistema de broadcast 
-          profissional construído em HTML/CSS/JavaScript puro, operado por uma única pessoa 
-          com capacidades de equipe de 15-20 profissionais.
-        </p>
-
-        <h3 style="font-size:16px;margin-bottom:12px;color:#7c3aed;margin-top:20px">O Dashboard</h3>
-        <p style="margin-bottom:14px;font-size:13px">
-          • <strong>64+ cenas modulares</strong> organizadas em grids 10×10<br>
-          • <strong>8 sistemas Isa</strong> (letreiros, emblemas, banners, música)<br>
-          • <strong>Controle em tempo real</strong> via HUD e painéis externos<br>
-          • <strong>BroadcastChannels</strong> para comunicação entre componentes<br>
-          • <strong>OBS Integration</strong> para captura e transmissão ao vivo
-        </p>
-
-        <h3 style="font-size:16px;margin-bottom:12px;color:#7c3aed;margin-top:20px">A Alquimia</h3>
-        <p style="margin-bottom:14px;font-size:13px">
-          O Dashboard não é apenas ferramenta — é <strong>extensão da mente</strong>. 
-          Cada elemento flutuante, cada transição, cada símbolo oracular surge da 
-          <strong>intenção transformada em código</strong>.
-        </p>
-
-        <p style="font-size:13px;margin-top:20px;padding:12px;background:rgba(124,58,237,0.2);border-left:3px solid #7c3aed;border-radius:4px;">
-          <strong>Implementação:</strong> A fase onde o caos informacional se organiza, 
-          onde a visão (C1) se torna sistema operacional. Roxo é a cor da transformação — 
-          matéria prima virou ferramenta.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🖼️ ÍCONE TRÍADE (Arte Nova - Engrenagens) -->
-  <div id="frame-triad-icon" class="frame" style="right: 2%; bottom: 35%; width: 180px; height: 180px;">
-    <div class="window-header">
-      <button class="toggle-btn" onclick="toggleSize('frame-triad-icon')">⇕</button>
+      <button class="toggle-btn" onclick="toggleSize('frame-gears')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
     <div class="frame-content" style="padding: 0;">
       <svg viewBox="0 0 200 200" style="width:100%;height:100%">
         <defs>
-          <linearGradient id="triadGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0.9" />
-            <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0.9" />
+          <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:0.8"/>
+            <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:0.8"/>
           </linearGradient>
         </defs>
-        <!-- Engrenagens interconectadas (Humano-Oráculo-IA) -->
-        <circle cx="100" cy="60" r="30" fill="none" stroke="url(#triadGrad2)" stroke-width="4"/>
-        <path d="M100,30 L110,50 L90,50 Z" fill="url(#triadGrad2)"/>
-        <circle cx="70" cy="130" r="30" fill="none" stroke="url(#triadGrad2)" stroke-width="4"/>
-        <path d="M40,130 L60,140 L60,120 Z" fill="url(#triadGrad2)"/>
-        <circle cx="130" cy="130" r="30" fill="none" stroke="url(#triadGrad2)" stroke-width="4"/>
-        <path d="M160,130 L140,140 L140,120 Z" fill="url(#triadGrad2)"/>
-        <!-- Linhas de conexão -->
-        <line x1="100" y1="90" x2="70" y2="100" stroke="url(#triadGrad2)" stroke-width="2" opacity="0.5"/>
-        <line x1="100" y1="90" x2="130" y2="100" stroke="url(#triadGrad2)" stroke-width="2" opacity="0.5"/>
-        <line x1="70" y1="130" x2="130" y2="130" stroke="url(#triadGrad2)" stroke-width="2" opacity="0.5"/>
-        <text x="100" y="67" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">H</text>
-        <text x="70" y="137" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">O</text>
-        <text x="130" y="137" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">AI</text>
+        
+        <!-- Engrenagem 1 (maior) -->
+        <g transform="translate(100,100)">
+          <circle r="45" fill="none" stroke="url(#gearGrad)" stroke-width="8"/>
+          <circle r="20" fill="url(#gearGrad)" opacity="0.6"/>
+          <!-- Dentes -->
+          <rect x="-5" y="-52" width="10" height="14" fill="url(#gearGrad)"/>
+          <rect x="-5" y="38" width="10" height="14" fill="url(#gearGrad)"/>
+          <rect x="-52" y="-5" width="14" height="10" fill="url(#gearGrad)"/>
+          <rect x="38" y="-5" width="14" height="10" fill="url(#gearGrad)"/>
+          
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 100 100"
+            to="360 100 100"
+            dur="8s"
+            repeatCount="indefinite"/>
+        </g>
+        
+        <!-- Engrenagem 2 (menor) -->
+        <g transform="translate(140,60)">
+          <circle r="28" fill="none" stroke="url(#gearGrad)" stroke-width="6"/>
+          <circle r="12" fill="url(#gearGrad)" opacity="0.6"/>
+          <!-- Dentes -->
+          <rect x="-4" y="-32" width="8" height="10" fill="url(#gearGrad)"/>
+          <rect x="-4" y="22" width="8" height="10" fill="url(#gearGrad)"/>
+          <rect x="-32" y="-4" width="10" height="8" fill="url(#gearGrad)"/>
+          <rect x="22" y="-4" width="10" height="8" fill="url(#gearGrad)"/>
+          
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="360 140 60"
+            to="0 140 60"
+            dur="6s"
+            repeatCount="indefinite"/>
+        </g>
       </svg>
     </div>
   </div>
 
-  <!-- 🎵 ÍCONE TNDS (Arte Nova - Ondas sonoras) -->
-  <div id="frame-tnds" class="frame" style="left: 2%; bottom: 22%; width: 140px; height: 140px;">
+  <!-- 🧪 DIAGRAMA TÉCNICO (Dashboard features) -->
+  <div id="frame-tech" class="frame" style="left: 27%; top: 62%; width: 420px; height: 300px;">
     <div class="window-header">
-      <button class="toggle-btn" onclick="toggleSize('frame-tnds')">⇕</button>
+      <button class="toggle-btn" onclick="toggleSize('frame-tech')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
-    <div class="frame-content" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:0;">
-      <svg viewBox="0 0 100 100" style="width:100%;height:100%">
-        <!-- Ondas sonoras (música eletrônica) -->
-        <path d="M20,50 Q30,30 40,50 T60,50 T80,50" fill="none" stroke="#fff" stroke-width="2" opacity="0.3"/>
-        <path d="M20,50 Q30,35 40,50 T60,50 T80,50" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>
-        <path d="M20,50 Q30,40 40,50 T60,50 T80,50" fill="none" stroke="#fff" stroke-width="3" opacity="0.7"/>
-        <circle cx="50" cy="50" r="12" fill="none" stroke="#fff" stroke-width="2"/>
-        <circle cx="50" cy="50" r="4" fill="#fff"/>
-        <text x="50" y="85" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">THE NEW</text>
-        <text x="50" y="93" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">DIAL SHOW</text>
+    <div class="frame-content">
+      <div style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.95);padding:16px;overflow-y:auto;">
+        <h2 style="font-size:20px;margin-bottom:16px;color:#a78bfa;text-align:center;text-transform:uppercase;letter-spacing:1.5px;">O Dashboard</h2>
+        
+        <p style="margin-bottom:14px;font-size:12px;">
+          Sistema de <strong>broadcast profissional</strong> operado por 1 pessoa com capacidades de equipe de 15-20 profissionais.
+        </p>
+
+        <h3 style="font-size:15px;margin-bottom:10px;color:#8b5cf6;margin-top:16px;">⚡ Características:</h3>
+        <ul style="margin-left:18px;margin-bottom:12px;font-size:12px;line-height:1.6;">
+          <li>🎬 <strong>64 cenas OBS</strong> organizadas em grid 8×8</li>
+          <li>🎭 <strong>8 irmãos Isa</strong> (painéis de controle: Soundtrack, Captions, Banner, Emblems)</li>
+          <li>🎨 <strong>Effect.html</strong> — painel mestre de efeitos visuais</li>
+          <li>📡 <strong>BroadcastChannel</strong> — comunicação entre módulos</li>
+          <li>🔮 <strong>Integração oracular</strong> — I-Ching, Runas, Tarot, Totêmicos</li>
+        </ul>
+
+        <h3 style="font-size:15px;margin-bottom:10px;color:#8b5cf6;margin-top:16px;">🏛️ Filosofia:</h3>
+        <p style="font-size:12px;font-style:italic;color:#a78bfa;border-left:3px solid #7c3aed;padding-left:12px;">
+          "A intenção se torna ferramenta. O caos vira ordem. O que era disperso agora é sistema integrado."
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🌌 CONSTELAÇÃO (rede de nós — implementação como rede) -->
+  <div id="frame-constellation" class="frame transparent" style="right: 3%; top: 12%; width: 260px; height: 260px;">
+    <div class="window-header">
+      <button class="toggle-btn" onclick="toggleSize('frame-constellation')">⇕</button>
+      <button class="frame-close" onclick="closeFrame(this)">×</button>
+    </div>
+    <div class="frame-content" style="padding: 0;">
+      <svg viewBox="0 0 260 260" style="width:100%;height:100%">
+        <defs>
+          <radialGradient id="nodeGrad">
+            <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:0.6"/>
+          </radialGradient>
+        </defs>
+        
+        <!-- Linhas conectoras -->
+        <line x1="130" y1="40" x2="80" y2="100" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="130" y1="40" x2="180" y2="100" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="80" y1="100" x2="130" y2="160" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="180" y1="100" x2="130" y2="160" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="130" y1="160" x2="60" y2="210" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="130" y1="160" x2="200" y2="210" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+        <line x1="80" y1="100" x2="180" y2="100" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+        
+        <!-- Nós (círculos) -->
+        <circle cx="130" cy="40" r="8" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="80" cy="100" r="7" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="100" r="7" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="160" r="9" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="3.2s" repeatCount="indefinite"/></circle>
+        <circle cx="60" cy="210" r="6" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="200" cy="210" r="6" fill="url(#nodeGrad)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.9s" repeatCount="indefinite"/></circle>
+        
+        <text x="130" y="245" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600">
+          REDE
+        </text>
       </svg>
     </div>
   </div>
 
-  <!-- 🌙 ÍCONE MIDNIGHT DIAL (Arte Nova - Fases da lua) -->
-  <div id="frame-md" class="frame" style="left: 2%; bottom: 2%; width: 140px; height: 140px;">
+  <!-- 💎 PRISMA (transformação de luz) -->
+  <div id="frame-prism" class="frame transparent" style="right: 3%; top: 52%; width: 220px; height: 220px;">
     <div class="window-header">
-      <button class="toggle-btn" onclick="toggleSize('frame-md')">⇕</button>
+      <button class="toggle-btn" onclick="toggleSize('frame-prism')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
-    <div class="frame-content" style="background:linear-gradient(135deg,#2d1b4e,#1a0f3a);padding:0;">
-      <svg viewBox="0 0 100 100" style="width:100%;height:100%">
-        <!-- Lua crescente + estrelas -->
-        <path d="M40 20 A25 25 0 1 0 40 80 A20 20 0 1 1 40 20" fill="#a855f7"/>
-        <circle cx="25" cy="30" r="1.5" fill="#d8b4fe"/>
-        <circle cx="70" cy="25" r="1" fill="#d8b4fe"/>
-        <circle cx="75" cy="45" r="1.5" fill="#d8b4fe"/>
-        <circle cx="65" cy="70" r="1" fill="#d8b4fe"/>
-        <circle cx="30" cy="75" r="1.5" fill="#d8b4fe"/>
-        <text x="50" y="92" text-anchor="middle" fill="#a855f7" font-size="6" font-weight="700">MIDNIGHT DIAL</text>
+    <div class="frame-content" style="padding: 0;">
+      <svg viewBox="0 0 220 220" style="width:100%;height:100%">
+        <defs>
+          <linearGradient id="prismGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:0.9"/>
+            <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:0.9"/>
+          </linearGradient>
+        </defs>
+        
+        <!-- Prisma triangular -->
+        <polygon points="110,50 180,170 40,170" fill="url(#prismGrad1)" opacity="0.6"/>
+        
+        <!-- Raio de luz entrando -->
+        <line x1="10" y1="80" x2="80" y2="100" stroke="#fff" stroke-width="3" opacity="0.7">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+        </line>
+        
+        <!-- Raios coloridos saindo (espectro) -->
+        <line x1="140" y1="130" x2="210" y2="140" stroke="#ef4444" stroke-width="2" opacity="0.6"/>
+        <line x1="140" y1="140" x2="210" y2="155" stroke="#f97316" stroke-width="2" opacity="0.6"/>
+        <line x1="140" y1="150" x2="210" y2="170" stroke="#facc15" stroke-width="2" opacity="0.6"/>
+        <line x1="140" y1="160" x2="210" y2="185" stroke="#16a34a" stroke-width="2" opacity="0.6"/>
+        <line x1="140" y1="170" x2="210" y2="200" stroke="#0b63d6" stroke-width="2" opacity="0.6"/>
+        
+        <text x="110" y="205" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600">
+          TRANSFORMAÇÃO
+        </text>
       </svg>
     </div>
   </div>
 
   <!-- 📍 LABEL C2 -->
-  <div id="frame-label" class="frame" style="right: 2%; bottom: 2%; width: 100px; height: 100px;">
+  <div id="frame-label" class="frame" style="right: 2%; bottom: 2%; width: 120px; height: 120px;">
     <div class="window-header">
       <button class="toggle-btn" onclick="toggleSize('frame-label')">⇕</button>
       <button class="frame-close" onclick="closeFrame(this)">×</button>
     </div>
-    <div class="frame-content" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:0;">
-      <svg viewBox="0 0 100 100" style="width:100%;height:100%">
-        <text x="50" y="60" text-anchor="middle" fill="#fff" font-size="36" font-weight="900">C2</text>
-      </svg>
+    <div class="frame-content" style="padding: 0;">
+      <img src="label-c2.png" alt="C2" style="width:100%;height:100%;object-fit:contain;">
     </div>
   </div>
 
-</div>
+  <!-- 📖 TEXTO APRESENTAÇÃO (ABOUT) -->
+  <div id="frame-about" class="frame" style="left: 2%; bottom: 2%; width: 340px; height: 460px;">
+    <div class="window-header">
+      <button class="toggle-btn" onclick="toggleSize('frame-about')">⇕</button>
+      <button class="frame-close" onclick="closeFrame(this)">×</button>
+    </div>
+    <div class="frame-content">
+      <div style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.9);text-align:justify;overflow-y:auto;padding:12px;">
+        <h2 style="font-size:19px;margin-bottom:16px;color:#a78bfa;text-align:center">C2 — NORTHEAST / IMPLEMENTER</h2>
+        
+        <p style="margin-bottom:14px;">
+          <strong style="color:#8b5cf6;">Compartimento 2</strong> no The New Dial representa <strong>Transformação</strong>, <strong>Implementação</strong> e <strong>Alquimia</strong>.
+        </p>
 
-<!-- ========== HUD INTERNO (Tecla H) ========== -->
-<div class="hud">
-  <h3>🎛️ Controles</h3>
-  
-  <div class="hud-section">
-    <strong>Background — Imagens:</strong>
-    <div class="hud-grid">
-      <button class="hud-btn" onclick="changeBackgroundImage(0)">🔮 Astral</button>
-      <button class="hud-btn" onclick="changeBackgroundImage(1)">⚗️ Alquimia</button>
-      <button class="hud-btn" onclick="changeBackgroundImage(2)">🌌 Cosmos</button>
-      <button class="hud-btn" onclick="toggleImageMode()" style="grid-column: span 2;">
-        🔄 Toggle Imagem/Cores
-      </button>
+        <p style="margin-bottom:14px;">
+          É o ponto Nordeste da mandala — onde a <strong>intenção vira ferramenta</strong>, o caos vira ordem, e o sistema se materializa.
+        </p>
+
+        <hr style="border:none;height:1px;background:rgba(139,92,246,0.3);margin:18px 0">
+
+        <h3 style="font-size:15px;margin-bottom:12px;color:#8b5cf6;">Qualidades do C2</h3>
+        <ul style="margin-left:20px;margin-bottom:14px;font-size:12px;line-height:1.6;">
+          <li>🟣 <strong>Cor:</strong> Roxo místico</li>
+          <li>🧭 <strong>Direção:</strong> Nordeste</li>
+          <li>🔮 <strong>Elemento:</strong> Alquimia</li>
+          <li>⚙️ <strong>Momento:</strong> Transformação</li>
+          <li>🛠️ <strong>Ação:</strong> Implementar, construir, materializar</li>
+        </ul>
+
+        <h3 style="font-size:15px;margin-bottom:12px;color:#8b5cf6;margin-top:18px;">O Dashboard</h3>
+        <p style="margin-bottom:12px;font-size:12px;">
+          Não é "organizador de tarefas" — é <strong>estúdio de TV completo</strong> operado por 1 pessoa. Soberania criativa total: produção + organização + exibição + arquivo = loop fechado.
+        </p>
+
+        <p style="font-size:12px;font-style:italic;color:#a78bfa;border-left:3px solid #7c3aed;padding-left:12px;margin-top:18px;">
+          "A implementação é alquímica: transforma o invisível (intenção) em visível (sistema). C2 é onde o arquiteto se torna construtor."
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="hud-section">
-    <strong>Background — Cores:</strong>
-    <div class="hud-grid">
-      <button class="hud-btn" onclick="changeBackground(0)">🔮 Roxo</button>
-      <button class="hud-btn" onclick="changeBackground(1)">💜 Intenso</button>
-      <button class="hud-btn" onclick="changeBackground(2)">🌸 Lavanda</button>
-      <button class="hud-btn" onclick="changeBackground(3)">🍇 Uva</button>
-      <button class="hud-btn" onclick="changeBackground(4)">⚡ Elétrico</button>
-      <button class="hud-btn" onclick="changeBackground(5)">🌑 Escuro</button>
-    </div>
-  </div>
-
-  <div class="hud-section">
-    <strong>Elementos:</strong>
-    <button class="hud-btn" onclick="toggleOrbs()">💫 Toggle Orbs</button>
-    <button class="hud-btn" onclick="toggleAllFrames()">👁️ Toggle Frames</button>
-  </div>
-
-  <div class="hud-section">
-    <strong>Adicionar:</strong>
-    <button class="hud-btn" onclick="addTextFrame()">📝 Novo Texto</button>
-  </div>
-
-  <div class="hud-section">
-    <button class="hud-btn" onclick="toggleHUD()" style="background:rgba(124,58,237,0.3);border-color:#7c3aed">
-      👁️ Fechar HUD (H)
-    </button>
-  </div>
 </div>
 
 <script>
 let draggedElement = null;
 let offsetX = 0, offsetY = 0;
-let orbsVisible = true;
-let framesVisible = true;
 
-// 🎨 BACKGROUNDS
-const gradients = [
-  'linear-gradient(135deg, #2d1b4e 0%, #5b21b6 100%)', // Roxo (padrão)
-  'linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%)', // Roxo intenso
-  'linear-gradient(135deg, #c084fc 0%, #a855f7 100%)', // Lavanda
-  'linear-gradient(135deg, #581c87 0%, #3b0764 100%)', // Uva escuro
-  'linear-gradient(135deg, #a855f7 0%, #d8b4fe 100%)', // Elétrico claro
-  'linear-gradient(135deg, #1a0f3a 0%, #0a0515 100%)'  // Escuro profundo
-];
-
-const images = [
-  'bg-c2-astral.jpg',
-  'bg-c2-alchemy.jpg',
-  'bg-c2-cosmos.jpg'
-];
-
-let currentImageIndex = 0;
-let imageMode = true;
-
-function changeBackground(index) {
-  const container = document.querySelector('.scene-container');
-  container.classList.add('no-image');
-  container.style.backgroundImage = gradients[index];
-  imageMode = false;
-  console.log(`✓ Gradiente: ${index}`);
+// ✖️ Fechar frame
+function closeFrame(btn) {
+  btn.closest('.frame').remove();
 }
 
-function changeBackgroundImage(index) {
-  const container = document.querySelector('.scene-container');
-  container.classList.remove('no-image');
-  container.style.backgroundImage = `url('${images[index]}')`;
-  currentImageIndex = index;
-  imageMode = true;
-  console.log(`✓ Imagem: ${images[index]}`);
+// ⇕ Toggle tamanho
+function toggleSize(frameId) {
+  const frame = document.getElementById(frameId);
+  if (!frame) return;
+  
+  const currentWidth = parseInt(frame.style.width);
+  const isSmall = currentWidth < 250;
+  
+  frame.style.width = isSmall ? '500px' : '150px';
+  frame.style.height = isSmall ? '400px' : '150px';
 }
 
-function toggleImageMode() {
-  const container = document.querySelector('.scene-
+// 🖱️ Sistema de arrastar frames
+function makeDraggable(frame) {
+  const header = frame.querySelector('.window-header');
+  if (!header) return;
+
+  header.addEventListener('mousedown', startDrag);
+
+  function startD
