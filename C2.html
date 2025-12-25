@@ -524,4 +524,67 @@ function makeDraggable(frame) {
 
   header.addEventListener('mousedown', startDrag);
 
-  function startD
+  function startDrag(e) {
+    if (e.target.tagName === 'BUTTON') return;
+
+    draggedElement = frame;
+    frame.classList.add('active');
+    header.classList.add('dragging');
+    document.body.classList.add("noselect");
+
+    const rect = frame.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+  }
+
+  function drag(e) {
+    if (!draggedElement) return;
+
+    const sceneRect = draggedElement.parentElement.getBoundingClientRect();
+    let newX = e.clientX - sceneRect.left - offsetX;
+    let newY = e.clientY - sceneRect.top - offsetY;
+
+    newX = Math.max(0, Math.min(newX, sceneRect.width - draggedElement.offsetWidth));
+    newY = Math.max(0, Math.min(newY, sceneRect.height - draggedElement.offsetHeight));
+
+    draggedElement.style.left = newX + 'px';
+    draggedElement.style.top  = newY + 'px';
+  }
+
+  function stopDrag() {
+    if (draggedElement) {
+      header.classList.remove('dragging');
+      setTimeout(() => draggedElement.classList.remove('active'), 100);
+      draggedElement = null;
+    }
+
+    document.body.classList.remove("noselect");
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+  }
+}
+
+// 📡 LISTENER PARA O BOTÃO ABOUT (index.html)
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'toggleAbout') {
+    const aboutFrame = document.getElementById('frame-about');
+    if (aboutFrame) {
+      aboutFrame.style.display = event.data.visible ? 'flex' : 'none';
+      console.log(`📖 About frame C1: ${event.data.visible ? 'visible' : 'hidden'}`);
+    }
+  }
+});
+
+// 🚀 Inicializar
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.frame').forEach(frame => {
+    makeDraggable(frame);
+  });
+});
+</script>
+
+</body>
+</html>
