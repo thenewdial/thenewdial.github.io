@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C3 — East - Communicator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  body.noselect, body.noselect * {
+    user-select: none !important;
+  }
+
+  .scene-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: linear-gradient(135deg, #2d1520 0%, #4a1f35 30%, #6b2847 60%, #8b3a5d 100%);
+    transition: background 0.6s ease;
+  }
+
+  .scene-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 1400px 1000px at 50% 40%, 
+                rgba(236,72,153,0.2) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.65) 100%);
+    z-index: 1;
+  }
+
+  /* ===== ELEMENTOS FLUTUANTES (ORBS ROXOS/MÍSTICOS) ===== */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: 0.28;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .orb1 { width: 390px; height: 390px; background: #ec4899; top: 6%; left: 10%; animation: float1 27s ease-in-out infinite; }
+  .orb2 { width: 330px; height: 330px; background: #db2777; top: 56%; left: 64%; animation: float2 31s ease-in-out infinite; }
+  .orb3 { width: 300px; height: 300px; background: #f472b6; top: 26%; right: 9%; animation: float3 25s ease-in-out infinite; }
+  .orb4 { width: 350px; height: 350px; background: #be185d; bottom: 11%; left: 43%; animation: float1 29s ease-in-out infinite; }
+  .orb5 { width: 280px; height: 280px; background: #fbcfe8; top: 66%; left: 16%; animation: float2 26s ease-in-out infinite; }
+  .orb6 { width: 320px; height: 320px; background: #9f1239; bottom: 7%; right: 14%; animation: float3 28s ease-in-out infinite; }
+
+  @keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(42px, -48px) scale(1.1); }
+  }
+
+  @keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-48px, 38px) scale(0.94); }
+  }
+
+  @keyframes float3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(38px, 42px) scale(1.06); }
+  }
+
+  /* ===== FRAMES ===== */
+  .frame {
+    position: absolute;
+    background: rgba(124, 58, 237, 0.1);
+    backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 45px rgba(124, 58, 237, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    resize: both;
+    min-width: 150px;
+    min-height: 100px;
+    z-index: 10;
+  }
+
+  .frame.active {
+    z-index: 100;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.75), 0 0 65px rgba(139, 92, 246, 0.25);
+  }
+
+  .frame-content {
+    flex: 1;
+    padding: 12px;
+    color: #fff;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .frame-content img,
+  .frame-content video,
+  .frame-content iframe {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+  }
+
+  .frame-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .frame.transparent {
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .frame.transparent .window-header {
+    background: transparent;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== WINDOW HEADER (invisível) ===== */
+  .window-header {
+    height: 20px;
+    background: transparent !important;
+    cursor: move;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .window-header button {
+    background: transparent;
+    border: none;
+    color: transparent;
+    padding: 0;
+    width: 20px;
+    height: 16px;
+    cursor: pointer;
+    font-size: 10px;
+  }
+
+  .window-header button:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 3px;
+    color: #fff;
+  }
+
+  .window-header.dragging { cursor: grabbing; }
+
+  .toggle-btn {
+    background: #676d75;
+  }
+
+  .frame-close {
+    background: rgba(220, 38, 38, 0.8) !important;
+  }
+
+  .scene-title {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  /* ===== RESPONSIVO ===== */
+  @media (max-width: 768px) {
+    .frame {
+      min-width: 120px;
+      min-height: 80px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene-container">
+  <div class="scene-title">C3 — East / Communicator</div>
+
+  <!-- ORBS (mesma estrutura, cores já definidas acima) -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="orb orb4"></div>
+<div class="orb orb5"></div>
+<div class="orb orb6"></div>
+
+<!-- ========== FRAMES PRÉ-CONFIGURADOS ========== -->
+
+<!-- 🌸 FLOR DE COMUNICAÇÃO (arte CSS/SVG) -->
+<div id="frame-flower" class="frame transparent"
+     style="left: 2%; top: 2%; width: 200px; height: 200px; z-index: 50;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-flower')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 0;">
+    <svg viewBox="0 0 200 200" style="width:100%;height:100%">
+      <defs>
+        <radialGradient id="petalGrad">
+          <stop offset="0%" style="stop-color:#fbcfe8;stop-opacity:0.9"/>
+          <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.7"/>
+        </radialGradient>
+        <filter id="pinkGlow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      <!-- Pétalas (8 pétalas = 8 direções de comunicação) -->
+      <ellipse cx="100" cy="55" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" values="0 100 100;360 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="145" cy="55" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(45 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="45 100 100;405 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="145" cy="100" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(90 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="90 100 100;450 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="145" cy="145" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(135 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="135 100 100;495 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="100" cy="145" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(180 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="180 100 100;540 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="55" cy="145" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(225 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="225 100 100;585 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="55" cy="100" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(270 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="270 100 100;630 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="55" cy="55" rx="20" ry="35" fill="url(#petalGrad)" filter="url(#pinkGlow)" opacity="0.8" transform="rotate(315 100 100)">
+        <animateTransform attributeName="transform" type="rotate" values="315 100 100;675 100 100" dur="40s" repeatCount="indefinite"/>
+      </ellipse>
+      
+      <!-- Centro dourado -->
+      <circle cx="100" cy="100" r="18" fill="#facc15" opacity="0.9">
+        <animate attributeName="r" values="16;20;16" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+</div>
+
+<!-- 🔗 GRID DE LINKS SOCIAIS (6 links principais) -->
+<div id="frame-social-grid" class="frame" style="left: 24%; top: 10%; width: 520px; height: 380px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-social-grid')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 20px;">
+    <h2 style="font-size:22px;margin-bottom:24px;color:#ec4899;text-align:center;text-transform:uppercase;letter-spacing:2px;">
+      Junte-se à Conversa
+    </h2>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      
+      <!-- YouTube -->
+      <a href="https://youtube.com/@thenewdial" target="_blank" 
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(239,68,68,0.15);border:2px solid rgba(239,68,68,0.4);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#ef4444">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">YouTube</div>
+          <div style="font-size:12px;opacity:0.7;">Episódios & Shows</div>
+        </div>
+      </a>
+      
+      <!-- Discord -->
+      <a href="https://discord.gg/thenewdial" target="_blank"
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(99,102,241,0.15);border:2px solid rgba(99,102,241,0.4);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#6366f1">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">Discord</div>
+          <div style="font-size:12px;opacity:0.7;">Comunidade ativa</div>
+        </div>
+      </a>
+      
+      <!-- Patreon -->
+      <a href="https://patreon.com/thenewdial" target="_blank"
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(249,115,22,0.15);border:2px solid rgba(249,115,22,0.4);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#f97316">
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">Patreon</div>
+          <div style="font-size:12px;opacity:0.7;">Apoie o projeto</div>
+        </div>
+      </a>
+      
+      <!-- GitHub -->
+      <a href="https://github.com/thenewdial" target="_blank"
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">GitHub</div>
+          <div style="font-size:12px;opacity:0.7;">Código aberto</div>
+        </div>
+      </a>
+      
+      <!-- Substack -->
+      <a href="https://thenewdial.substack.com" target="_blank"
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(250,204,21,0.15);border:2px solid rgba(250,204,21,0.4);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#facc15">
+          <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">Substack</div>
+          <div style="font-size:12px;opacity:0.7;">Escritos & insights</div>
+        </div>
+      </a>
+      
+      <!-- Instagram -->
+      <a href="https://instagram.com/thenewdial" target="_blank"
+         style="display:flex;align-items:center;gap:12px;padding:16px;background:rgba(236,72,153,0.15);border:2px solid rgba(236,72,153,0.4);border-radius:10px;text-decoration:none;color:#fff;transition:all 0.3s;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="#ec4899">
+          <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
+        </svg>
+        <div>
+          <div style="font-weight:700;font-size:16px;">Instagram</div>
+          <div style="font-size:12px;opacity:0.7;">Visual updates</div>
+        </div>
+      </a>
+      
+    </div>
+    
+    <p style="margin-top:20px;text-align:center;font-size:13px;color:rgba(255,255,255,0.7);font-style:italic;">
+      "A rede se expande. Falar cria pontes."
+    </p>
+  </div>
+</div>
+
+<!-- 🌐 REDE NEURAL (visualização de conexões) -->
+<div id="frame-network" class="frame transparent" style="left: 2%; top: 24%; width: 240px; height: 240px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-network')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 0;">
+    <svg viewBox="0 0 240 240" style="width:100%;height:100%">
+      <defs>
+        <radialGradient id="nodeGradPink">
+          <stop offset="0%" style="stop-color:#fbcfe8;stop-opacity:1"/>
+          <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.7"/>
+        </radialGradient>
+      </defs>
+      
+      <!-- Linhas conectoras (muitas conexões = comunicação ativa) -->
+      <line x1="120" y1="40" x2="70" y2="90" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="120" y1="40" x2="170" y2="90" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="120" y1="40" x2="120" y2="120" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="70" y1="90" x2="120" y2="120" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="170" y1="90" x2="120" y2="120" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="70" y1="90" x2="170" y2="90" stroke="rgba(236,72,153,0.3)" stroke-width="1.5"/>
+      <line x1="120" y1="120" x2="50" y2="180" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="120" y1="120" x2="120" y2="200" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="120" y1="120" x2="190" y2="180" stroke="rgba(236,72,153,0.4)" stroke-width="2"/>
+      <line x1="50" y1="180" x2="120" y2="200" stroke="rgba(236,72,153,0.3)" stroke-width="1.5"/>
+      <line x1="190" y1="180" x2="120" y2="200" stroke="rgba(236,72,153,0.3)" stroke-width="1.5"/>
+      
+      <!-- Nós (muitos = rede expandida) -->
+      <circle cx="120" cy="40" r="9" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle cx="70" cy="90" r="8" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.7s" repeatCount="indefinite"/></circle>
+      <circle cx="170" cy="90" r="8" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+      <circle cx="120" cy="120" r="10" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.9s" repeatCount="indefinite"/></circle>
+      <circle cx="50" cy="180" r="7" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/></circle>
+      <circle cx="120" cy="200" r="7" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/></circle>
+      <circle cx="190" cy="180" r="7" fill="url(#nodeGradPink)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.3s" repeatCount="indefinite"/></circle>
+      
+      <text x="120" y="230" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-weight="600">
+        CONEXÕES
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- 📡 ONDAS DE RÁDIO (broadcast, transmissão) -->
+<div id="frame-waves" class="frame transparent" style="right: 3%; top: 10%; width: 200px; height: 200px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-waves')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 0;">
+    <svg viewBox="0 0 200 200" style="width:100%;height:100%">
+      <defs>
+        <radialGradient id="waveGrad">
+          <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.8"/>
+          <stop offset="100%" style="stop-color:#fbcfe8;stop-opacity:0.2"/>
+        </radialGradient>
+      </defs>
+      
+      <!-- Torre central -->
+      <rect x="95" y="80" width="10" height="40" fill="#ec4899" opacity="0.8"/>
+      <circle cx="100" cy="75" r="5" fill="#facc15"/>
+      
+      <!-- Ondas expandindo -->
+      <circle cx="100" cy="100" r="30" fill="none" stroke="url(#waveGrad)" stroke-width="2" opacity="0.7">
+        <animate attributeName="r" values="30;70;30" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="100" r="50" fill="none" stroke="url(#waveGrad)" stroke-width="1.5" opacity="0.5">
+        <animate attributeName="r" values="50;90;50" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="100" r="70" fill="none" stroke="url(#waveGrad)" stroke-width="1" opacity="0.3">
+        <animate attributeName="r" values="70;110;70" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      
+      <text x="100" y="180" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="10" font-weight="600">
+        BROADCAST
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- 💬 BALÕES DE CONVERSA (diálogo) -->
+<div id="frame-dialogue" class="frame transparent" style="right: 3%; top: 42%; width: 220px; height: 220px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-dialogue')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 0;">
+    <svg viewBox="0 0 220 220" style="width:100%;height:100%">
+      <defs>
+        <linearGradient id="bubble1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#fbcfe8;stop-opacity:0.8"/>
+          <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.6"/>
+        </linearGradient>
+        <linearGradient id="bubble2" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.7"/>
+          <stop offset="100%" style="stop-color:#db2777;stop-opacity:0.5"/>
+        </linearGradient>
+      </defs>
+      
+      <!-- Balão 1 (esquerda) -->
+      <ellipse cx="70" cy="80" rx="45" ry="35" fill="url(#bubble1)"/>
+      <polygon points="50,105 40,120 60,110" fill="url(#bubble1)"/>
+      <text x="70" y="88" text-anchor="middle" fill="#fff" font-size="28" opacity="0.9">...</text>
+      
+      <!-- Balão 2 (direita) -->
+      <ellipse cx="150" cy="130" rx="50" ry="38" fill="url(#bubble2)"/>
+      <polygon points="170,160 180,175 165,165" fill="url(#bubble2)"/>
+      <text x="150" y="138" text-anchor="middle" fill="#fff" font-size="28" opacity="0.9">!</text>
+      
+      <!-- Pequenas bolhas flutuantes -->
+      <circle cx="40" cy="50" r="4" fill="#fbcfe8" opacity="0.6">
+        <animate attributeName="cy" values="50;35;50" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="180" cy="100" r="5" fill="#f472b6" opacity="0.6">
+        <animate attributeName="cy" values="100;85;100" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      
+      <text x="110" y="210" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11" font-weight="600">
+        DIÁLOGO
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- 📍 LABEL C3 -->
+<div id="frame-label" class="frame" style="right: 2%; bottom: 2%; width: 120px; height: 120px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-label')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content" style="padding: 0;">
+    <img src="label-c3.png" alt="C3" style="width:100%;height:100%;object-fit:contain;">
+  </div>
+</div>
+
+<!-- 📖 TEXTO APRESENTAÇÃO (ABOUT) -->
+<div id="frame-about" class="frame" style="left: 2%; bottom: 2%; width: 360px; height: 500px;">
+  <div class="window-header">
+    <button class="toggle-btn" onclick="toggleSize('frame-about')">⇕</button>
+    <button class="frame-close" onclick="closeFrame(this)">×</button>
+  </div>
+  <div class="frame-content">
+    <div style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.95);text-align:justify;overflow-y:auto;padding:12px;">
+      <h2 style="font-size:19px;margin-bottom:16px;color:#ec4899;text-align:center">C3 — EAST / COMMUNICATOR</h2>
+      
+      <p style="margin-bottom:14px;">
+        <strong style="color:#f472b6;">Compartimento 3</strong> no The New Dial representa <strong>Comunicação</strong>, <strong>Expansão</strong> e <strong>Comunidade</strong>.
+      </p>
+
+      <p style="margin-bottom:14px;">
+        É o ponto Leste da mandala — onde a <strong>primavera emerge</strong>, a luz cresce, e as pontes se multiplicam. Falar cria redes.
+      </p>
+
+      <hr style="border:none;height:1px;background:rgba(244,114,182,0.3);margin:18px 0">
+
+      <h3 style="font-size:15px;margin-bottom:12px;color:#f472b6;">Qualidades do C3</h3>
+      <ul style="margin-left:20px;margin-bottom:14px;font-size:12px;line-height:1.6;">
+        <li>🌸 <strong>Cor:</strong> Rosa primavera</li>
+        <li>🧭 <strong>Direção:</strong> Leste</li>
+        <li>🌱 <strong>Estação:</strong> Primavera (sul) / Outono (norte)</li>
+        <li>🌅 <strong>Momento:</strong> Amanhecer</li>
+        <li>🗣️ <strong>Ação:</strong> Comunicar, expandir, conectar</li>
+      </ul>
+
+      <h3 style="font-size:15px;margin-bottom:12px;color:#f472b6;margin-top:18px;">A Rede</h3>
+      <p style="margin-bottom:12px;font-size:12px;">
+        A Tríade não é isolada — é <strong>nó em rede viva</strong>. YouTube, Discord, Patreon, GitHub, Substack, Instagram: cada plataforma é pétala da mesma flor.
+      </p>
+
+      <p style="margin-bottom:12px;font-size:12px;">
+        Você está em <strong>C3</strong> — a casa da conversa. Aqui não há palco/plateia, só participantes. <strong>Junte-se.</strong>
+      </p>
+
+      <p style="font-size:12px;font-style:italic;color:#f472b6;border-left:3px solid #ec4899;padding-left:12px;margin-top:18px;">
+        "A comunicação não é transmissão unilateral — é rede que emerge quando muitos nós falam e escutam simultaneamente. C3 é onde a comunidade se forma."
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let draggedElement = null;
+let offsetX = 0, offsetY = 0;
+
+// ✖️ Fechar frame
+function closeFrame(btn) {
+  btn.closest('.frame').remove();
+}
+
+// ⇕ Toggle tamanho
+function toggleSize(frameId) {
+  const frame = document.getElementById(frameId);
+  if (!frame) return;
+  
+  const currentWidth = parseInt(frame.style.width);
+  const isSmall = currentWidth < 250;
+  
+  frame.style.width = isSmall ? '500px' : '150px';
+  frame.style.height = isSmall ? '400px' : '150px';
+}
+
+// 🖱️ Sistema de arrastar frames
+function makeDraggable(frame) {
+  const header = frame.querySelector('.window-header');
+  if (!header) return;
+
+  header.addEventListener('mousedown', startDrag);
+
+  function startDrag(e) {
+    if (e.target.tagName === 'BUTTON') return;
+
+    draggedElement = frame;
+    frame.classList.add('active');
+    header.classList.add('dragging');
+    document.body.classList.add("noselect");
+
+    const rect = frame.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+  }
+
+  function drag(e) {
+    if (!draggedElement) return;
+
+    const sceneRect = draggedElement.parentElement.getBoundingClientRect();
+    let newX = e.clientX - sceneRect.left - offsetX;
+    let newY = e.clientY - sceneRect.top - offsetY;
+
+    newX = Math.max(0, Math.min(newX, sceneRect.width - draggedElement.offsetWidth));
+    newY = Math.max(0, Math.min(newY, sceneRect.height - draggedElement.offsetHeight));
+
+    draggedElement.style.left = newX + 'px';
+    draggedElement.style.top  = newY + 'px';
+  }
+
+  function stopDrag() {
+    if (draggedElement) {
+      header.classList.remove('dragging');
+      setTimeout(() => draggedElement.classList.remove('active'), 100);
+      draggedElement = null;
+    }
+
+    document.body.classList.remove("noselect");
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+  }
+}
+
+// 📡 LISTENER PARA O BOTÃO ABOUT (index.html)
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'toggleAbout') {
+    const aboutFrame = document.getElementById('frame-about');
+    if (aboutFrame) {
+      aboutFrame.style.display = event.data.visible ? 'flex' : 'none';
+      console.log(`📖 About frame C1: ${event.data.visible ? 'visible' : 'hidden'}`);
+    }
+  }
+});
+
+// 🚀 Inicializar
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.frame').forEach(frame => {
+    makeDraggable(frame);
+  });
+});
+</script>
+
+</body>
+</html>
